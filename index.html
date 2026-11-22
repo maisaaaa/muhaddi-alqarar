@@ -3,193 +3,264 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مُهدّئ القرار الفوري — نبض الأمان</title>
+  <title>مُهدّئ القرار الفوري | SCAMSHIELD AI</title>
   <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --accent: #10b981;
-      --warn: #f59e0b;
-      --danger: #ef4444;
-      --text: #f8fafc;
-      --muted: #94a3b8;
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
     }
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
       min-height: 100vh;
+      background-color: #0b131e;
+      color: #f1f5f9;
       display: flex;
       justify-content: center;
-      padding: 20px;
+      align-items: center;
+      padding: 16px;
     }
-    .app {
+    .card {
       width: 100%;
-      max-width: 560px;
-      background: var(--card);
+      max-width: 460px;
+      background-color: #16202e;
+      border: 1px solid #243246;
       border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.08);
+      padding: 28px 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      text-align: center;
     }
     .badge {
       display: inline-block;
-      background: rgba(16, 185, 129, 0.15);
+      background-color: rgba(16, 185, 129, 0.14);
       color: #34d399;
-      padding: 6px 12px;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      padding: 6px 14px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 0.8rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
-    h1 { margin: 0 0 8px; font-size: 24px; }
-    p.sub { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.6; }
-    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.65rem;
+      color: #ffffff;
+    }
+    .subtitle {
+      margin: 0 0 22px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: #94a3b8;
+    }
+    .input-label {
+      display: block;
+      text-align: right;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+    }
     textarea {
       width: 100%;
-      min-height: 110px;
+      height: 110px;
+      background-color: #0f1724;
+      border: 1px solid #2b3a4f;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: #0f172a;
-      color: var(--text);
       padding: 12px;
-      font-size: 14px;
-      resize: vertical;
-      margin-bottom: 14px;
+      color: #f8fafc;
+      font-size: 0.92rem;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+    }
+    textarea:focus {
+      border-color: #10b981;
     }
     .btn {
       width: 100%;
+      margin-top: 16px;
+      padding: 14px;
       border: none;
       border-radius: 12px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-primary { background: var(--accent); color: #052e16; }
-    .btn-primary:hover { filter: brightness(1.06); }
-    .box {
-      margin-top: 20px;
-      background: #0f172a;
-      border-radius: 14px;
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,0.1);
-      display: none;
-    }
-    .timer {
-      font-size: 34px;
+      background-color: #10b981;
+      color: #052e16;
+      font-size: 1rem;
       font-weight: 800;
-      text-align: center;
-      color: var(--warn);
-      margin: 10px 0;
+      cursor: pointer;
+      transition: background-color 0.2s ease, opacity 0.2s ease;
     }
-    .signals { list-style: none; padding: 0; margin: 12px 0 0; }
-    .signals li {
-      background: rgba(239, 68, 68, 0.12);
-      border-right: 3px solid var(--danger);
-      padding: 10px 12px;
-      border-radius: 8px;
+    .btn:hover:not(:disabled) {
+      background-color: #34d399;
+    }
+    .btn:disabled {
+      background-color: #14533e;
+      color: #6ee7b7;
+      cursor: not-allowed;
+    }
+    .timer-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 18px;
+      background-color: #0f1724;
+      border: 1px solid #243246;
+      border-radius: 14px;
+    }
+    .breathe-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e2e8f0;
       margin-bottom: 8px;
-      font-size: 13px;
     }
-    .safe-note {
+    .countdown {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #f59e0b;
+      margin: 4px 0 12px;
+    }
+    .tip-title {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    .tip-box {
+      background-color: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-right: 4px solid #ef4444;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: #fecaca;
+      text-align: right;
+    }
+    .analysis-box {
+      display: none;
       margin-top: 14px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: right;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .analysis-high {
+      background-color: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fecaca;
+    }
+    .analysis-safe {
+      background-color: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #a7f3d0;
+    }
+    .privacy {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: #64748b;
     }
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="card">
     <div class="badge">فريق نبض الأمان • SCAMSHIELD AI</div>
     <h1>مُهدّئ القرار الفوري</h1>
-    <p class="sub">
-      حسّيتِ بتوتر أو استعجال من رسالة أو اتصال يطلب تحويل مالي أو بيانات؟ خذي وقفة هادئة قبل أي قرار.
+    <p class="subtitle">
+      حسّيت بتوتر أو استعجال من رسالة أو اتصال يطلب تحويل مالي أو بيانات؟ خذي وقفة هادئة قبل أي قرار.
     </p>
 
-    <label for="msgInput">الصقي نص الرسالة أو الموقف هنا (اختياري):</label>
-    <textarea id="msgInput" placeholder="مثال: حسابك البنكي سيتوقف خلال ساعة، اضغط على الرابط أو حوّل المبلغ الآن..."></textarea>
+    <label class="input-label" for="messageInput">الصقي نص الرسالة أو الموقف هنا (اختياري):</label>
+    <textarea id="messageInput" placeholder="مثال: حسابك البنكي سيتوقف خلال ساعة، اضغط على الرابط أو حوّل المبلغ الآن..."></textarea>
 
-    <button class="btn btn-primary" onclick="startCalmPause()">بدء وقفة القرار (10 ثوانٍ)</button>
+    <button id="startBtn" class="btn" onclick="startCooldown()">بدء وقفة القرار (10 ثوانٍ)</button>
 
-    <div class="box" id="resultBox">
-      <div style="font-weight:700; text-align:center;">تنفّسي ببطء.. لا تتخذين أي إجراء الآن</div>
-      <div class="timer" id="countdown">10</div>
-      <div id="riskSummary" style="font-size:14px; font-weight:700; margin-bottom:8px;"></div>
-      <ul class="signals" id="signalsList"></ul>
-      <button class="btn btn-primary" id="confirmBtn" style="margin-top:14px; opacity:0.5;" disabled onclick="finishCheck()">
-        أكّدت هدوئي وراجعت المصدر بنفسي
-      </button>
+    <div id="timerPanel" class="timer-panel">
+      <div class="breathe-text">تنفّسي ببطء.. لا تتخذين أي إجراء الآن</div>
+      <div id="countdown" class="countdown">10</div>
+      <div class="tip-title">نصيحة وقائية فورية لكسر الاندفاع:</div>
+      <div class="tip-box">
+        تذكّري: المحتالون يعتمدون على سرعة ردّك قبل أن تتأكدي من القنوات الرسمية.
+      </div>
+      <div id="analysisBox" class="analysis-box"></div>
     </div>
 
-    <div class="safe-note">لا يتم حفظ أو إرسال رسائلك خارج جهازك — الخصوصية أولاً.</div>
+    <div class="privacy">لا يتم حفظ أو إرسال رسائلك خارج جهازك – الخصوصية أولاً.</div>
   </div>
 
   <script>
-    const redFlags = [
-      { words: ["خلال ساعة", "عاجل", "فوراً", "حالا", "حالاً", "آخر فرصة", "ينتهي"], tip: "استخدام عنصر الاستعجال والضغط الزمني لإرباكك." },
-      { words: ["إيقاف الحساب", "تجميد", "مخالفة", "محكمة", "شرطة", "بنك"], tip: "الانتحال أو التهديد بجهة رسمية/مالية لإثارة الخوف." },
-      { words: ["رقم سري", "otp", "رمز التحقق", "كلمة المرور", "تحويل", "بطاقة", "رابط"], tip: "طلب بيانات حساسة أو دفع/تحويل مالي تحت ضغط." }
+    let intervalId = null;
+
+    const scamKeywords = [
+      "سيتوقف", "إيقاف", "تجميد", "حسابك البنكي", "اضغط على الرابط",
+      "حوّل", "تحويل", "رمز التحقق", "otp", "كلمة المرور", "الرقم السري",
+      "فوراً", "الآن", "خلال ساعة", "غرامة", "مخالفة", "جائزة", "ربحت",
+      "تحديث البيانات", "بطاقتك", "الشرطة", "البنك المركزي", "شحنة", "توصيل"
     ];
 
-    function analyzeText(text) {
-      const clean = text.toLowerCase();
-      const found = [];
-      redFlags.forEach(item => {
-        if (item.words.some(w => clean.includes(w.toLowerCase()))) {
-          found.push(item.tip);
-        }
-      });
-      if (!text.trim()) {
-        found.push("تذكّري: المحتالون يعتمدون على سرعة ردّك قبل أن تتأكدي من القنوات الرسمية.");
-      } else if (found.length === 0) {
-        found.push("حتى لو بدت الرسالة عادية، تحقّقي من المرسل عبر تطبيق أو رقم رسمي موثوق.");
+    function analyzeMessage(text) {
+      const cleaned = text.trim().toLowerCase();
+      if (!cleaned) {
+        return {
+          hasText: false,
+          alertMsg: "ممتاز! أخذتِ وقتكِ بهدوء. يُنصح دائماً بالتواصل مع الجهة عبر قناتها الرسمية فقط."
+        };
       }
-      return found;
+
+      const found = scamKeywords.filter(word => cleaned.includes(word.toLowerCase()));
+      if (found.length > 0) {
+        return {
+          hasText: true,
+          highRisk: true,
+          html: `<strong>⚠️ تنبيه مؤشرات احتيال محتملة (${found.length}):</strong><br>تم رصد عبارات استعجال أو طلب بيانات/تحويل (${found.slice(0, 4).join("، ")}). لا تضغطي على أي رابط ولا تشاركي أي رمز سري، وتواصلي مباشرة مع الجهة عبر رقمها الرسمي.`,
+          alertMsg: "انتبهي! الرسالة تحتوي على مؤشرات استعجال أو احتيال. تواصلي مع الجهة عبر قناتها الرسمية فقط."
+        };
+      }
+
+      return {
+        hasText: true,
+        highRisk: false,
+        html: `<strong>✅ انتهت وقفة التهدئة:</strong><br>لم تُرصد كلمات استعجال تقليدية واضحة، لكن تذكّري دائماً التحقق من هوية المرسل عبر القنوات الرسمية قبل أي تحويل أو مشاركة بيانات.`,
+        alertMsg: "ممتاز! أخذتِ وقتكِ بهدوء. يُنصح دائماً بالتواصل مع الجهة عبر قناتها الرسمية فقط."
+      };
     }
 
-    function startCalmPause() {
-      const text = document.getElementById("msgInput").value;
-      const box = document.getElementById("resultBox");
-      const timerEl = document.getElementById("countdown");
-      const btn = document.getElementById("confirmBtn");
-      const summaryEl = document.getElementById("riskSummary");
-      const listEl = document.getElementById("signalsList");
+    function startCooldown() {
+      if (intervalId) clearInterval(intervalId);
 
-      const tips = analyzeText(text);
-      listEl.innerHTML = tips.map(t => `<li>${t}</li>`).join("");
-      summaryEl.textContent = text.trim()
-        ? `تم رصد ${tips.length} مؤشر/ملاحظة للانتباه لها:`
-        : "نصيحة وقائية فورية لكسر الاندفاع:";
+      const startBtn = document.getElementById("startBtn");
+      const timerPanel = document.getElementById("timerPanel");
+      const countdownEl = document.getElementById("countdown");
+      const analysisBox = document.getElementById("analysisBox");
+      const messageText = document.getElementById("messageInput").value;
 
-      box.style.display = "block";
-      btn.disabled = true;
-      btn.style.opacity = "0.5";
-      btn.textContent = "انتظري انتهاء عدّاد التهدئة...";
+      let seconds = 10;
+      startBtn.disabled = true;
+      startBtn.textContent = "انتظري انتهاء عدّاد التهدئة...";
+      timerPanel.style.display = "block";
+      analysisBox.style.display = "none";
+      countdownEl.textContent = seconds;
 
-      let left = 10;
-      timerEl.textContent = left;
+      intervalId = setInterval(() => {
+        seconds--;
+        countdownEl.textContent = seconds;
 
-      clearInterval(window._calmInterval);
-      window._calmInterval = setInterval(() => {
-        left -= 1;
-        timerEl.textContent = Math.max(left, 0);
-        if (left <= 0) {
-          clearInterval(window._calmInterval);
-          btn.disabled = false;
-          btn.style.opacity = "1";
-          btn.textContent = "أكّدت هدوئي وراجعت المصدر بنفسي";
+        if (seconds <= 0) {
+          clearInterval(intervalId);
+          intervalId = null;
+
+          const result = analyzeMessage(messageText);
+          if (result.hasText) {
+            analysisBox.className = "analysis-box " + (result.highRisk ? "analysis-high" : "analysis-safe");
+            analysisBox.innerHTML = result.html;
+            analysisBox.style.display = "block";
+          }
+
+          startBtn.disabled = false;
+          startBtn.textContent = "بدء وقفة القرار (10 ثوانٍ)";
+
+          setTimeout(() => {
+            alert(result.alertMsg);
+          }, 150);
         }
       }, 1000);
-    }
-
-    function finishCheck() {
-      alert("ممتاز! أخذتِ وقتكِ بهدوء. يُنصح دائماً بالتواصل مع الجهة عبر قناتها الرسمية فقط.");
     }
   </script>
 </body>
 </html>
-
