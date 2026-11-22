@@ -1,1 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مُهدّئ القرار الفوري — نبض الأمان</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .app {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    h1 { margin: 0 0 8px; font-size: 24px; }
+    p.sub { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: #0f172a;
+      color: var(--text);
+      padding: 12px;
+      font-size: 14px;
+      resize: vertical;
+      margin-bottom: 14px;
+    }
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #052e16; }
+    .btn-primary:hover { filter: brightness(1.06); }
+    .box {
+      margin-top: 20px;
+      background: #0f172a;
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: none;
+    }
+    .timer {
+      font-size: 34px;
+      font-weight: 800;
+      text-align: center;
+      color: var(--warn);
+      margin: 10px 0;
+    }
+    .signals { list-style: none; padding: 0; margin: 12px 0 0; }
+    .signals li {
+      background: rgba(239, 68, 68, 0.12);
+      border-right: 3px solid var(--danger);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .safe-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="badge">فريق نبض الأمان • SCAMSHIELD AI</div>
+    <h1>مُهدّئ القرار الفوري</h1>
+    <p class="sub">
+      حسّيتِ بتوتر أو استعجال من رسالة أو اتصال يطلب تحويل مالي أو بيانات؟ خذي وقفة هادئة قبل أي قرار.
+    </p>
+
+    <label for="msgInput">الصقي نص الرسالة أو الموقف هنا (اختياري):</label>
+    <textarea id="msgInput" placeholder="مثال: حسابك البنكي سيتوقف خلال ساعة، اضغط على الرابط أو حوّل المبلغ الآن..."></textarea>
+
+    <button class="btn btn-primary" onclick="startCalmPause()">بدء وقفة القرار (10 ثوانٍ)</button>
+
+    <div class="box" id="resultBox">
+      <div style="font-weight:700; text-align:center;">تنفّسي ببطء.. لا تتخذين أي إجراء الآن</div>
+      <div class="timer" id="countdown">10</div>
+      <div id="riskSummary" style="font-size:14px; font-weight:700; margin-bottom:8px;"></div>
+      <ul class="signals" id="signalsList"></ul>
+      <button class="btn btn-primary" id="confirmBtn" style="margin-top:14px; opacity:0.5;" disabled onclick="finishCheck()">
+        أكّدت هدوئي وراجعت المصدر بنفسي
+      </button>
+    </div>
+
+    <div class="safe-note">لا يتم حفظ أو إرسال رسائلك خارج جهازك — الخصوصية أولاً.</div>
+  </div>
+
+  <script>
+    const redFlags = [
+      { words: ["خلال ساعة", "عاجل", "فوراً", "حالا", "حالاً", "آخر فرصة", "ينتهي"], tip: "استخدام عنصر الاستعجال والضغط الزمني لإرباكك." },
+      { words: ["إيقاف الحساب", "تجميد", "مخالفة", "محكمة", "شرطة", "بنك"], tip: "الانتحال أو التهديد بجهة رسمية/مالية لإثارة الخوف." },
+      { words: ["رقم سري", "otp", "رمز التحقق", "كلمة المرور", "تحويل", "بطاقة", "رابط"], tip: "طلب بيانات حساسة أو دفع/تحويل مالي تحت ضغط." }
+    ];
+
+    function analyzeText(text) {
+      const clean = text.toLowerCase();
+      const found = [];
+      redFlags.forEach(item => {
+        if (item.words.some(w => clean.includes(w.toLowerCase()))) {
+          found.push(item.tip);
+        }
+      });
+      if (!text.trim()) {
+        found.push("تذكّري: المحتالون يعتمدون على سرعة ردّك قبل أن تتأكدي من القنوات الرسمية.");
+      } else if (found.length === 0) {
+        found.push("حتى لو بدت الرسالة عادية، تحقّقي من المرسل عبر تطبيق أو رقم رسمي موثوق.");
+      }
+      return found;
+    }
+
+    function startCalmPause() {
+      const text = document.getElementById("msgInput").value;
+      const box = document.getElementById("resultBox");
+      const timerEl = document.getElementById("countdown");
+      const btn = document.getElementById("confirmBtn");
+      const summaryEl = document.getElementById("riskSummary");
+      const listEl = document.getElementById("signalsList");
+
+      const tips = analyzeText(text);
+      listEl.innerHTML = tips.map(t => `<li>${t}</li>`).join("");
+      summaryEl.textContent = text.trim()
+        ? `تم رصد ${tips.length} مؤشر/ملاحظة للانتباه لها:`
+        : "نصيحة وقائية فورية لكسر الاندفاع:";
+
+      box.style.display = "block";
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.textContent = "انتظري انتهاء عدّاد التهدئة...";
+
+      let left = 10;
+      timerEl.textContent = left;
+
+      clearInterval(window._calmInterval);
+      window._calmInterval = setInterval(() => {
+        left -= 1;
+        timerEl.textContent = Math.max(left, 0);
+        if (left <= 0) {
+          clearInterval(window._calmInterval);
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          btn.textContent = "أكّدت هدوئي وراجعت المصدر بنفسي";
+        }
+      }, 1000);
+    }
+
+    function finishCheck() {
+      alert("ممتاز! أخذتِ وقتكِ بهدوء. يُنصح دائماً بالتواصل مع الجهة عبر قناتها الرسمية فقط.");
+    }
+  </script>
+</body>
+</html>
 
